@@ -13,7 +13,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-        VBox root = FXMLLoader.load(this.getClass().getResource("primary.fxml"));
+        VBox root = FXMLLoader.load(this.getClass().getResource("view/primary.fxml"));
         HBox container = (HBox) root.getChildren().get(0);
         container.setStyle("-fx-background-color: red;");
         VBox menu = (VBox) container.getChildren().get(1);

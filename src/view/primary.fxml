@@ -10,39 +10,38 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="800.0" style="-fx-background-color: E6E6E6;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="800.0" style="-fx-background-color: E6E6E6;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="model.controller.MenuController">
    <children>
       <HBox prefHeight="0.0" prefWidth="0.0" spacing="60.0">
          <children>
             <WebView minHeight="250.0" minWidth="150.0" prefHeight="250.0" prefWidth="150.0" />
-            <VBox minWidth="350.0" prefHeight="250.0" prefWidth="468.0" spacing="18.0">
+            <VBox fx:id="menuController" minWidth="350.0" prefHeight="250.0" prefWidth="468.0" spacing="18.0">
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0">
                      <children>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
                               <Label text="Source" />
-                              <TextField promptText="C:\Users\user-name-example" />
+                              <TextField fx:id="sourceField" promptText="C:\Users\user-name-example" />
                            </children>
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
                               <Label text="Destiny" />
-                              <TextField promptText="C:\Users\user-name-example" />
+                              <TextField fx:id="destinyField" promptText="C:\Users\user-name-example" />
                            </children>
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
                               <Label text="Ignore" />
-                              <TextField promptText="C:\Users\user-name-example" />
+                              <TextField fx:id="ignoreField" promptText="C:\Users\user-name-example" />
                            </children>
                         </VBox>
                      </children>
                   </VBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="28.0">
                      <children>
-                        <Button mnemonicParsing="false" text="START" />
+                        <Button fx:id="btnStart" mnemonicParsing="false" onAction="#OnBtnStartAction" text="START" />
                         <Button mnemonicParsing="false" text="PAUSE" />
                         <Button mnemonicParsing="false" text="STOP" />
                      </children>
