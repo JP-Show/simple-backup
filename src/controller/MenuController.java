@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import model.Backup;
+import model.BufferWriter;
 import model.exception.BackupException;
 
 public class MenuController implements Initializable{
@@ -35,6 +36,10 @@ public class MenuController implements Initializable{
 
     private boolean isBackupRunning = false;
 
+    private BufferWriter bufferWriter;
+
+    Task<Void> backupTask;
+
     @FXML
     public void OnBtnStartAction(){
             if (isBackupRunning) {
@@ -44,10 +49,9 @@ public class MenuController implements Initializable{
             String sourceStringURL = sourceField.getText();
             String destinyStringURL = destinyField.getText();
             String ignoreStringURL = ignoreField.getText();
-
+            
             //Here, we need to create a new Thread every backup, because if we reutilize same Thread, we get a IllegalThreadStateException
-
-            Task<Void> backupTask = new Task<Void>() {
+            backupTask = new Task<Void>() {
                 @Override
                 protected Void call() {
                     try {
@@ -55,10 +59,13 @@ public class MenuController implements Initializable{
                         System.out.println("Backup Concluido com sucesso");
                     } catch (BackupException e) {
                         System.err.printf("\nError: "+e.getMessage() + "\n" + "Cause: " + e.getCause());
+                    }finally{
+                        isBackupRunning = false;
                     }
-                    isBackupRunning = false;
+                    Thread.currentThread().interrupt();
                     return null;
                 }
+                
             };
             
             new Thread(backupTask).start();
@@ -69,23 +76,20 @@ public class MenuController implements Initializable{
     
     @FXML
     public void OnBtnPauseAction(){
-        // if (backupRun.isAlive()) {
-        //     try {
-        //         synchronized (backupRun){
-        //             System.out.println("Paused...");
-        //             backupRun.wait(1000);
-        //         }
-        //     } catch (Exception e) {
-        //         System.err.printf("\nError: "+e.getMessage() + "\n" + "Cause: " + e.getCause());
-        //     }
-
-        //     return;
-        // }    
+    //  try {
+    //     if(isBackupRunning){
+            
+    //     }
+    // } catch (InterruptedException e) {
+    //     e.printStackTrace();
+    // }   
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         displayConsole.setEditable(false);
+        bufferWriter = new BufferWriter(displayConsole);
+        bufferWriter.start();
         redirectSystemStreams();
         System.out.println("Ready");
     }
@@ -101,21 +105,13 @@ public class MenuController implements Initializable{
             private StringBuilder buffer = new StringBuilder();
             @Override
             public void write(int b) {
-                char c = (char) b;
-                buffer.append(c);
-                displayConsole.appendText(buffer.toString());
+                bufferWriter.addToBufffer(String.valueOf(b));
             }
 
             @Override
             public void write(byte[] b, int off, int len) {
                 String str = new String(b, off, len);
-                buffer.append(str);
-                while (true) {
-                    int newlineIndex = buffer.indexOf("\n");
-                    if (newlineIndex == -1) break;
-                    displayConsole.appendText(buffer.substring(0, newlineIndex + 1));
-                    buffer.delete(0, newlineIndex + 1);
-                }
+                bufferWriter.addToBufffer(str);
             }
         });
         System.setOut(logStream);
