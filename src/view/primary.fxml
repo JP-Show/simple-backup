@@ -42,7 +42,7 @@
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="28.0">
                      <children>
                         <Button fx:id="btnStart" mnemonicParsing="false" onAction="#OnBtnStartAction" text="START" />
-                        <Button mnemonicParsing="false" text="PAUSE" />
+                        <Button fx:id="btnPause" mnemonicParsing="false" onAction="#OnBtnPauseAction" text="PAUSE" />
                         <Button mnemonicParsing="false" text="STOP" />
                      </children>
                   </HBox>
@@ -59,7 +59,7 @@
             <Insets bottom="16.0" />
          </VBox.margin>
       </HBox>
-      <TextArea fx:id="displayConsole" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+      <TextArea fx:id="displayConsole" editable="false" prefHeight="200.0" prefWidth="200.0" />
    </children>
    <padding>
       <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
