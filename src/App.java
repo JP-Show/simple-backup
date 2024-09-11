@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

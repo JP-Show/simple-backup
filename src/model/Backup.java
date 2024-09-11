@@ -10,8 +10,11 @@ import model.exception.BackupException;
 
 public class Backup {
     public static void run(String sourcePath, String destinationPath, String exclude ) throws BackupException {
-        if(sourcePath == "") throw new BackupException("Error: Source not be empty", null);
-        if(destinationPath == "") throw new BackupException("Error: Destiny not be empty", null);
+        sourcePath = sourcePath.trim();
+        destinationPath = destinationPath.trim();
+
+        if(sourcePath.length() == 0) throw new BackupException("Error: Source não pode está vazio", null);
+        if(destinationPath.length() == 0) throw new BackupException("Error: Destiny não pode está vazio", null);
 
         if(exclude == "") exclude = "null";
 

@@ -88,7 +88,7 @@ public class MenuController implements Initializable{
             Backup.run(sourceStringURL, destinyStringURL, ignoreStringURL);
             System.out.println("...");
         } catch (BackupException e) {
-            System.out.println("caindo aqui");
+            System.err.printf("\n"+e.getMessage() + "\n" + "Cause: " + e.getCause());
         }
     }
 }
