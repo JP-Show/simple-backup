@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -26,7 +27,7 @@ public class App extends Application {
         source_input.setStyle("-fx-background-color: green;");
         // TextField menu_inputs = (TextField) ((VBox) menu.getChildren().get(0)).getChildren().get(1);
         // input_source.setStyle("-fx-background-color: green;");
-        
+    
         Scene scene = new Scene(root, 800, 480);
         String css = this.getClass().getResource("application.css").toExternalForm();
         scene.getStylesheets().add(css);

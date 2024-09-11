@@ -9,7 +9,7 @@ import java.nio.file.StandardCopyOption;
 import model.exception.BackupException;
 
 public class Backup {
-    public static void run(String sourcePath, String destinationPath, String exclude ) throws Exception {
+    public static void run(String sourcePath, String destinationPath, String exclude ) throws BackupException {
 
         if(sourcePath == "") throw new BackupException("Error: Source not be empty", null);
         if(sourcePath == "") throw new BackupException("Error: Destiny not be empty", null);
@@ -30,17 +30,16 @@ public class Backup {
         System.out.println("Inicializado...");
         System.out.println();
 
-
         //Initialization Backup
         try{
             copyFiles(srcDir, destDir, excludes);
         }catch(IOException e){
-            System.err.println(e.getMessage());
+            throw new BackupException(e.getMessage(), e.getCause());
         }
         System.out.println("Backup Concluido com sucesso");
     }
     
-    
+
     private static void copyFiles(Path source, Path destination, String[] excludeDirs) throws IOException{
         Files.walk(source).forEach(src -> {
             Path target = destination.resolve(source.relativize(src));
