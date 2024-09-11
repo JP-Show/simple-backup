@@ -1,13 +1,9 @@
 package controller;
 
-import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
-
-import javax.swing.plaf.basic.BasicLabelUI;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -33,22 +29,27 @@ public class MenuController implements Initializable{
     @FXML
     private TextArea displayConsole;
     
-    Thread backupRun = new Thread() {
-        @Override
-        public void run() {
-            runBackup();
-        };
-    };
+    Thread backupRun = new Thread() {};
 
     @FXML
     public void OnBtnStartAction(){
+
             if (backupRun.isAlive()) {
                 System.out.println("Already running...");
                 return;
-            } 
+            }
+            //Here, we need to create a new Thread every backup, because if we reutilize same Thread, we get a IllegalThreadStateException
+            backupRun = new Thread() {
+                @Override
+                public void run() {
+                        runBackup();
+                };
+            };
+
             backupRun.start();
             return;
     }
+    
     private void redirectSystemStreams() {
 
         // Define o PrintStream personalizado para logs
@@ -75,7 +76,8 @@ public class MenuController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        redirectSystemStreams();
+        // redirectSystemStreams();
+        System.out.println("Ready");
     }
 
     private void runBackup (){
@@ -86,7 +88,7 @@ public class MenuController implements Initializable{
             Backup.run(sourceStringURL, destinyStringURL, ignoreStringURL);
             System.out.println("...");
         } catch (BackupException e) {
-            e.printStackTrace();
+            System.out.println("caindo aqui");
         }
     }
 }
