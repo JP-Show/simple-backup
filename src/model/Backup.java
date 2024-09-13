@@ -23,6 +23,7 @@ public class Backup extends Thread{
     @Override
     public void run() {
         try {
+            isStop = false;
             runBackup();
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -48,8 +49,8 @@ public class Backup extends Thread{
         synchronized(lock){
             System.out.println("Stoping.......");
             pause = false;
-            lock.notify();
             isStop = true;
+            lock.notify();
         }
     }
 
@@ -95,8 +96,7 @@ public class Backup extends Thread{
                         Thread.currentThread().interrupt();
                     }
                 }
-                
-                if(isStop){
+                if(isStop) {
                     return;
                 }
 

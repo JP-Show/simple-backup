@@ -12,7 +12,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import model.Backup;
 import model.BufferWriter;
-import model.exception.BackupException;
 
 public class MenuController implements Initializable{
     @FXML
@@ -34,10 +33,12 @@ public class MenuController implements Initializable{
     private TextArea displayConsole;
 
     private boolean isBackupRunning = false;
+    private boolean isPaused = false;
 
     private BufferWriter bufferWriter;
 
     private Backup backupTask;
+
 
     @FXML
     public void OnBtnStartAction(){
@@ -50,21 +51,6 @@ public class MenuController implements Initializable{
             String ignoreStringURL = ignoreField.getText();
             
             //Here, we need to create a new Thread every backup, because if we reutilize same Thread, we get a IllegalThreadStateException
-            
-            // backupTask = new Thread() {
-            //     @Override
-            //     public void run() {
-            //         try {
-            //             Backup.run(sourceStringURL, destinyStringURL, ignoreStringURL);
-            //             System.out.println("Backup Concluido com sucesso");
-            //         } catch (BackupException e) {
-            //             System.err.printf("\nError: "+e.getMessage() + "\n" + "Cause: " + e.getCause());
-            //         }finally{
-            //             isBackupRunning = false;
-            //         }
-            //         interrupt();
-            //     }
-            // };
 
             backupTask = new Backup(sourceStringURL, destinyStringURL, ignoreStringURL){
                 @Override
@@ -74,20 +60,18 @@ public class MenuController implements Initializable{
                 }
             };
             backupTask.start();
-
             isBackupRunning = true;
-            
             return;
     }
     
     @FXML
     public void OnBtnPauseAction(){
-        if(isBackupRunning){
+        if(isBackupRunning && !isPaused){
             backupTask.pause();
-            isBackupRunning = false;
-        } else {
+            isPaused = true;
+        } else if (isPaused){
             backupTask.unPause();
-            isBackupRunning = true;
+            isPaused = false;
         }
     }
 
