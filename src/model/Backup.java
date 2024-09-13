@@ -8,8 +8,52 @@ import java.nio.file.StandardCopyOption;
 
 import model.exception.BackupException;
 
-public class Backup {
-    public static void run(String sourcePath, String destinationPath, String exclude ) throws BackupException {
+public class Backup extends Thread{
+    String sourcePath, destinationPath, exclude;
+    private static boolean pause = false;
+    private static boolean isStop = false;
+    private static final Object lock = new Object();
+
+    public Backup(String sourcePath, String destinationPath, String exclude){
+       this.sourcePath = sourcePath;
+       this.destinationPath = destinationPath;
+       this.exclude = exclude;
+    }
+
+    @Override
+    public void run() {
+        try {
+            runBackup();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void pause(){
+        synchronized(lock){
+            pause = true;
+            System.out.println("PAUSED....");
+        }
+    }
+    
+    public void unPause(){
+        synchronized(lock){
+            pause = false;
+            lock.notify();
+            System.out.println("Resume....");
+        }
+    }
+
+    public void finish(){
+        synchronized(lock){
+            System.out.println("Stoping.......");
+            pause = false;
+            lock.notify();
+            isStop = true;
+        }
+    }
+
+    private void runBackup() throws BackupException {
         sourcePath = sourcePath.trim();
         destinationPath = destinationPath.trim();
 
@@ -41,30 +85,45 @@ public class Backup {
         System.out.println("Backup Concluido com sucesso");
     }
     
-
     private static void copyFiles(Path source, Path destination, String[] excludeDirs) throws IOException{
         Files.walk(source).forEach(src -> {
-            Path target = destination.resolve(source.relativize(src));
-            for (String exclude : excludeDirs) {
-                System.out.println(src.toString() + " ------- " + exclude);
-                if (src.toString().equals(exclude)) {
-                    return; // Skip this file as it matches the exclusion criteria
+            synchronized(lock){
+                while(pause){
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                
+                if(isStop){
+                    return;
+                }
+
+                Path target = destination.resolve(source.relativize(src));
+                for (String exclude : excludeDirs) {
+                    System.out.println(src.toString() + " ------- " + exclude);
+                    if (src.toString().equals(exclude)) {
+                        return; // Skip this file as it matches the exclusion criteria
+                    }
+                }
+                if (Files.isDirectory(src)) {
+                    try {
+                        Files.createDirectories(target);
+                    } catch (IOException e) {
+                        System.err.println("Failed to create directory: " + e.getMessage());
+                    }
+                } else {
+                    try {
+                        Files.copy(src, target, StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println("Arquivo " + src + " copiada para " + target);
+                    } catch (IOException e) {
+                        System.err.println("Erro ao copiar o arquivo: " + e.getMessage());
+                    }
                 }
             }
-            if (Files.isDirectory(src)) {
-                try {
-                    Files.createDirectories(target);
-                } catch (IOException e) {
-                    System.err.println("Failed to create directory: " + e.getMessage());
-                }
-            } else {
-                try {
-                    Files.copy(src, target, StandardCopyOption.REPLACE_EXISTING);
-                    System.out.println("Arquivo " + src + " copiada para " + target);
-                } catch (IOException e) {
-                    System.err.println("Erro ao copiar o arquivo: " + e.getMessage());
-                }
-            }
+
         });
     }
+
 }

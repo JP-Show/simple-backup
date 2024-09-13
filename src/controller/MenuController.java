@@ -5,7 +5,6 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -38,7 +37,7 @@ public class MenuController implements Initializable{
 
     private BufferWriter bufferWriter;
 
-    Task<Void> backupTask;
+    private Backup backupTask;
 
     @FXML
     public void OnBtnStartAction(){
@@ -51,24 +50,31 @@ public class MenuController implements Initializable{
             String ignoreStringURL = ignoreField.getText();
             
             //Here, we need to create a new Thread every backup, because if we reutilize same Thread, we get a IllegalThreadStateException
-            backupTask = new Task<Void>() {
-                @Override
-                protected Void call() {
-                    try {
-                        Backup.run(sourceStringURL, destinyStringURL, ignoreStringURL);
-                        System.out.println("Backup Concluido com sucesso");
-                    } catch (BackupException e) {
-                        System.err.printf("\nError: "+e.getMessage() + "\n" + "Cause: " + e.getCause());
-                    }finally{
-                        isBackupRunning = false;
-                    }
-                    Thread.currentThread().interrupt();
-                    return null;
-                }
-                
-            };
             
-            new Thread(backupTask).start();
+            // backupTask = new Thread() {
+            //     @Override
+            //     public void run() {
+            //         try {
+            //             Backup.run(sourceStringURL, destinyStringURL, ignoreStringURL);
+            //             System.out.println("Backup Concluido com sucesso");
+            //         } catch (BackupException e) {
+            //             System.err.printf("\nError: "+e.getMessage() + "\n" + "Cause: " + e.getCause());
+            //         }finally{
+            //             isBackupRunning = false;
+            //         }
+            //         interrupt();
+            //     }
+            // };
+
+            backupTask = new Backup(sourceStringURL, destinyStringURL, ignoreStringURL){
+                @Override
+                public void run() {
+                    super.run();
+                    isBackupRunning = false;
+                }
+            };
+            backupTask.start();
+
             isBackupRunning = true;
             
             return;
@@ -76,13 +82,21 @@ public class MenuController implements Initializable{
     
     @FXML
     public void OnBtnPauseAction(){
-    //  try {
-    //     if(isBackupRunning){
-            
-    //     }
-    // } catch (InterruptedException e) {
-    //     e.printStackTrace();
-    // }   
+        if(isBackupRunning){
+            backupTask.pause();
+            isBackupRunning = false;
+        } else {
+            backupTask.unPause();
+            isBackupRunning = true;
+        }
+    }
+
+    @FXML
+    public void OnBtnStopAction(){
+        if(backupTask.isAlive()){
+            backupTask.finish();
+            isBackupRunning = false;
+        }
     }
 
     @Override

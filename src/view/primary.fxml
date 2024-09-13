@@ -43,7 +43,7 @@
                      <children>
                         <Button fx:id="btnStart" mnemonicParsing="false" onAction="#OnBtnStartAction" text="START" />
                         <Button fx:id="btnPause" mnemonicParsing="false" onAction="#OnBtnPauseAction" text="PAUSE" />
-                        <Button mnemonicParsing="false" text="STOP" />
+                        <Button mnemonicParsing="false" onAction="#OnBtnStopAction" text="STOP" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
