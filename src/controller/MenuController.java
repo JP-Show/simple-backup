@@ -8,7 +8,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -51,6 +50,7 @@ public class MenuController implements Initializable{
                 System.out.println("Already running...");
                 return;
             }
+            bufferWriter.cleanerBuffer();
             String sourceStringURL = sourceField.getText();
             String destinyStringURL = destinyField.getText();
             String ignoreStringURL = ignoreField.getText();
@@ -63,12 +63,14 @@ public class MenuController implements Initializable{
                     super.run();
                     status.setText("Done");
                     isBackupRunning = false;
+                    System.gc();
                 }
             };
             backupTask.start();
             isBackupRunning = true;
             status.setText("Running");
             return;
+
     }
     
     @FXML

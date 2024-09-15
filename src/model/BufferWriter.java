@@ -42,4 +42,9 @@ public class BufferWriter extends Thread {
         running = false;
         interrupt();
     }
+
+    public void cleanerBuffer(){
+        textArea.clear();
+        queue.clear();
+    }
 }

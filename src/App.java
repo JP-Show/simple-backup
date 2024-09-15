@@ -19,7 +19,14 @@ public class App extends Application {
         primaryStage.setTitle("Simple Backup");
         primaryStage.setScene(scene);
         primaryStage.show();
+        
 
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();    
+        System.exit(0);
     }
     public static void main(String[] args) {
         launch(args);
