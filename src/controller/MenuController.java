@@ -8,8 +8,10 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import model.Backup;
 import model.BufferWriter;
 
@@ -31,6 +33,9 @@ public class MenuController implements Initializable{
 
     @FXML
     private TextArea displayConsole;
+
+    @FXML
+    private Text status;
 
     private boolean isBackupRunning = false;
     private boolean isPaused = false;
@@ -56,28 +61,33 @@ public class MenuController implements Initializable{
                 @Override
                 public void run() {
                     super.run();
+                    status.setText("Done");
                     isBackupRunning = false;
                 }
             };
             backupTask.start();
             isBackupRunning = true;
+            status.setText("Running");
             return;
     }
     
     @FXML
     public void OnBtnPauseAction(){
         if(isBackupRunning && !isPaused){
+            status.setText("Paused");
             backupTask.pause();
             isPaused = true;
         } else if (isPaused){
             backupTask.unPause();
             isPaused = false;
+            status.setText("Running");
         }
     }
 
     @FXML
     public void OnBtnStopAction(){
         if(backupTask.isAlive()){
+            status.setText("Stopped");
             backupTask.finish();
             isBackupRunning = false;
         }
@@ -100,7 +110,6 @@ public class MenuController implements Initializable{
          * O que estamos fazendo é sobreescrevendo o métodos e coloco ele dentro do textarea
         */
         PrintStream logStream = new PrintStream(new OutputStream() {
-            private StringBuilder buffer = new StringBuilder();
             @Override
             public void write(int b) {
                 bufferWriter.addToBufffer(String.valueOf(b));

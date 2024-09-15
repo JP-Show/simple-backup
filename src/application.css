@@ -1,3 +1,16 @@
 #hboxis{
     -fx-background-color: red;
 }
+.button{
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #FFFFFF;
+}
+.textfields{
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #FFFFFF;
+}
+.console{
+    -fx-background-color: #1A1A1A;
+    -fx-text-fill: #FFFFFF;
+    -fx-control-inner-background:#1A1A1A;
+}
