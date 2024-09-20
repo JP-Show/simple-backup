@@ -10,16 +10,13 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-
         VBox root = FXMLLoader.load(this.getClass().getResource("view/primary.fxml"));
-    
         Scene scene = new Scene(root, 800, 480);
         String css = this.getClass().getResource("application.css").toExternalForm();
         scene.getStylesheets().add(css);
         primaryStage.setTitle("Simple Backup");
         primaryStage.setScene(scene);
         primaryStage.show();
-        
 
     }
 
@@ -29,6 +26,7 @@ public class App extends Application {
         System.exit(0);
     }
     public static void main(String[] args) {
+        
         launch(args);
     }
 }

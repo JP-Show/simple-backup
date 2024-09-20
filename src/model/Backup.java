@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import javafx.scene.control.ProgressBar;
 import model.exception.BackupException;
 
 public class Backup extends Thread{
@@ -13,11 +14,15 @@ public class Backup extends Thread{
     private static boolean pause = false;
     private static boolean isStop = false;
     private static final Object lock = new Object();
+    private static int numFiles = 0;
+    private static int i = 0;
+    private static ProgressBar progressBar;
 
-    public Backup(String sourcePath, String destinationPath, String exclude){
+    public Backup(String sourcePath, String destinationPath, String exclude, ProgressBar pBar){
        this.sourcePath = sourcePath;
        this.destinationPath = destinationPath;
        this.exclude = exclude;
+       progressBar = pBar;
     }
 
     @Override
@@ -87,7 +92,10 @@ public class Backup extends Thread{
     }
     
     private static void copyFiles(Path source, Path destination, String[] excludeDirs) throws IOException{
-        Files.walk(source).forEach(src -> {
+        Files.walk(source, MAX_PRIORITY).forEach((src) -> {
+            numFiles++;
+        });
+        Files.walk(source).forEach((src) -> {
             synchronized(lock){
                 while(pause){
                     try {
@@ -99,7 +107,9 @@ public class Backup extends Thread{
                 if(isStop) {
                     return;
                 }
-
+                i++;
+                progressBar.setProgress((float) i/numFiles);
+                
                 Path target = destination.resolve(source.relativize(src));
                 for (String exclude : excludeDirs) {
                     System.out.println(src.toString() + " ------- " + exclude);
