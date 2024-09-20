@@ -109,7 +109,7 @@ public class Backup extends Thread{
                 }
                 i++;
                 progressBar.setProgress((float) i/numFiles);
-                
+
                 Path target = destination.resolve(source.relativize(src));
                 for (String exclude : excludeDirs) {
                     System.out.println(src.toString() + " ------- " + exclude);
@@ -135,5 +135,4 @@ public class Backup extends Thread{
 
         });
     }
-
 }
