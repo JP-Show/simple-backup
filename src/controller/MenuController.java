@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import model.Backup;
 import model.BufferWriter;
+import model.exception.BackupException;
 
 public class MenuController implements Initializable{
     @FXML
@@ -102,6 +103,10 @@ public class MenuController implements Initializable{
     @FXML
     public void OnbtnSendToListAction(){
         String src = ignoreField.getText();
+        if (src.matches(" *")) {
+            System.out.println("Endereço não pode ser vazio");
+            return;
+        }
         Text ignoreText = new Text(src);
         ignoreField.setText("");
         ignoreText.setOnMouseClicked(event -> {
@@ -112,7 +117,6 @@ public class MenuController implements Initializable{
         listIgnore.add(ignoreText);
     }
     
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         displayConsole.setEditable(false);
