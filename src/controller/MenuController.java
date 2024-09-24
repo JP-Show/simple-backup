@@ -17,7 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import model.Backup;
 import model.BufferWriter;
-import model.exception.BackupException;
 
 public class MenuController implements Initializable{
     @FXML
@@ -59,10 +58,9 @@ public class MenuController implements Initializable{
             bufferWriter.cleanerBuffer();
             String sourceStringURL = sourceField.getText();
             String destinyStringURL = destinyField.getText();
-            String ignoreStringURL = ignoreField.getText();
             
             //Here, we need to create a new Thread every backup, because if we reutilize same Thread, we get a IllegalThreadStateException
-            backupTask = new Backup(sourceStringURL, destinyStringURL, ignoreStringURL, progressBar){
+            backupTask = new Backup(sourceStringURL, destinyStringURL, listIgnore, progressBar){
                 @Override
                 public void run() {
                     super.run();

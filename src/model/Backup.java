@@ -5,12 +5,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Set;
 
 import javafx.scene.control.ProgressBar;
+import javafx.scene.text.Text;
 import model.exception.BackupException;
 
 public class Backup extends Thread{
-    String sourcePath, destinationPath, exclude;
+    private String sourcePath, destinationPath;
+    Set<Text> listIgnore;
     private static boolean pause = false;
     private static boolean isStop = false;
     private static final Object lock = new Object();
@@ -18,10 +21,10 @@ public class Backup extends Thread{
     private static int i = 0;
     private static ProgressBar progressBar;
 
-    public Backup(String sourcePath, String destinationPath, String exclude, ProgressBar pBar){
+    public Backup(String sourcePath, String destinationPath, Set<Text> listIgnore, ProgressBar pBar){
        this.sourcePath = sourcePath;
        this.destinationPath = destinationPath;
-       this.exclude = exclude;
+       this.listIgnore = listIgnore;
        progressBar = pBar;
     }
 
@@ -66,9 +69,6 @@ public class Backup extends Thread{
         if(sourcePath.length() == 0) throw new BackupException("Error: Source não pode está vazio", null);
         if(destinationPath.length() == 0) throw new BackupException("Error: Destiny não pode está vazio", null);
 
-        if(exclude == "") exclude = "null";
-
-        String[] excludes = exclude.split(",");
 
         //Creating Path with our params
         Path srcDir;
@@ -83,8 +83,18 @@ public class Backup extends Thread{
         System.out.println();
 
         //Initialization Backup
+
+        String[] arrText = new String[listIgnore.size()];
+
+        {
+            int i = 0;
+            for (Text text : listIgnore) {
+                arrText[i] = text.getText();
+                i++;
+            }
+        }
         try{
-            copyFiles(srcDir, destDir, excludes);
+            copyFiles(srcDir, destDir, arrText);
         }catch(IOException e){
             throw new BackupException(e.getMessage(), e.getCause());
         }
