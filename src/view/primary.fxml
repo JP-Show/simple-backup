@@ -21,13 +21,13 @@
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
                               <Label text="Source" />
-                              <TextField fx:id="sourceField" promptText="C:\Users\user-name-example" styleClass="textfields" />
+                              <TextField fx:id="sourceField" onMouseClicked="#OnOpenDirectorySourceClickAction" promptText="C:\Users\user-name-example" styleClass="textfields" />
                            </children>
                         </VBox>
                         <VBox prefHeight="200.0" prefWidth="100.0">
                            <children>
                               <Label text="Destiny" />
-                              <TextField fx:id="destinyField" promptText="C:\Users\user-name-example" styleClass="textfields" />
+                              <TextField fx:id="destinyField" onMouseClicked="#OnOpenDirectoryDestinyClickAction" promptText="C:\Users\user-name-example" styleClass="textfields" />
                            </children>
                         </VBox>
                         <VBox fx:id="vboxIgnore" prefHeight="200.0" prefWidth="100.0">
@@ -35,7 +35,7 @@
                               <Label text="Ignore - clica no endereço para apagar" />
                               <HBox prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <TextField fx:id="ignoreField" alignment="BOTTOM_LEFT" minWidth="-Infinity" promptText="C:\Users\user-name-example" styleClass="textfields" HBox.hgrow="ALWAYS">
+                                    <TextField fx:id="ignoreField" alignment="BOTTOM_LEFT" minWidth="-Infinity" onMouseClicked="#OnOpenDirectoryIgnoreClickAction" promptText="C:\Users\user-name-example" styleClass="textfields" HBox.hgrow="ALWAYS">
                                        <HBox.margin>
                                           <Insets right="10.0" />
                                        </HBox.margin>

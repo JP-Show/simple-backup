@@ -17,7 +17,7 @@ public class App extends Application {
         primaryStage.setTitle("Simple Backup");
         primaryStage.setScene(scene);
         primaryStage.show();
-
+        
     }
 
     @Override
