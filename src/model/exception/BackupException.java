@@ -1,7 +1,9 @@
 package model.exception;
 
 public class BackupException extends Exception  {
-    public BackupException (String msg, Throwable cause){
+        private static final long serialVersionUID = 1L;
+    
+        public BackupException (String msg, Throwable cause){
         super(msg, cause);
     }
 }

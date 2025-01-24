@@ -8,16 +8,12 @@ import java.util.HashSet;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import javax.swing.JFileChooser;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
@@ -61,12 +57,11 @@ public class MenuController implements Initializable{
         directoryChooser.setTitle("Selecione a pasta de destino");
         directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         File selectedDirectory = directoryChooser.showDialog(null);
-        String path = selectedDirectory.getAbsolutePath();
-
-        if (!path.isEmpty()) {
-            return path;
+        String path = selectedDirectory == null ? "" : selectedDirectory .getAbsolutePath();
+        if (path.isEmpty()) {
+            return "";
         }
-        return "";
+        return path;
     }
 
     @FXML
